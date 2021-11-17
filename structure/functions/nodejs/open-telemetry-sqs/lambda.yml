@@ -1,0 +1,16 @@
+NodeJsOpenTelemetrySQS:
+  handler: structure/functions/nodejs/open-telemetry-sqs/handler.main
+  description: NODEJS - OTEL
+  memorySize: ${self:provider.memorySize}
+  timeout: ${self:provider.timeout}
+  runtime: ${self:provider.nodejs_runtime}
+  layers:
+    - arn:aws:lambda:${self:provider.environment.AWS_REGION_DEPLOYED}:901920570463:layer:${self:provider.environment.OTEL_TARGET_NODEJS}
+  environment:
+    AWS_LAMBDA_EXEC_WRAPPER: /opt/otel-handler
+    OPEN_TELEMETRY_QUEUE_NAME: ${self:privateEnvironment.SQS.OPEN_TELEMETRY_QUEUE_NAME}
+  events:
+    - http:
+        path: nodejs/open-telemetry-sqs
+        method: get
+        cors: true

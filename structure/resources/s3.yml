@@ -1,0 +1,15 @@
+Resources:
+  S3StsOpenTelemetryLogs:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: sts-open-telemetry-logs
+
+  S3StsOpenTelemetryMetrics:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: sts-open-telemetry-metrics
+
+  S3StsOpenTelemetryTraces:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: sts-open-telemetry-traces

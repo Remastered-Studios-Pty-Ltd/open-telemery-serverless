@@ -1,0 +1,82 @@
+service: sts-open-telemetry
+
+frameworkVersion: '2'
+
+package:
+  excludeDevDependencies: true
+  individually: true
+
+provider:
+  name: aws
+  profile: ${opt:profile, 'rema-open-telemetry'}
+  stage: ${env:STAGE, 'dev'}
+  region: ${env:AWS_REGION, 'eu-west-1'}
+  ssh_key: ${env:AWS_EC2_SSH_KEY_NAME, 'OpenTelemetry'}
+  python_runtime: python3.8
+  nodejs_runtime: nodejs14.x
+  memorySize: 128
+  timeout: 30
+  lambdaHashingVersion: 20201221
+  tracing:
+    lambda: true
+  iamRoleStatements: ${file(structure/providers/iam_roles.yml)}
+  environment:
+    RESOURCE_PREFIX: ${self:service}-${self:provider.stage}-
+    AWS_REGION_DEPLOYED: ${self:provider.region}
+    DEPLOYMENT_ENV: ${self:provider.stage}
+    AWS_ACCOUNT_ID:
+      Ref:
+        AWS::AccountId
+
+    # Open Telemetry
+    OPENTELEMETRY_COLLECTOR_CONFIG_FILE: /var/task/collector.yaml
+    # OPENTELEMETRY_COLLECTOR_ARGS:
+    #   !Join
+    #   - ''
+    #   - - '--set=exporters.otlphttp.endpoint='
+    #     - 'https://'
+    #     - !Ref ApiGatewayRestApi
+    #     - '.execute-api.'
+    #     - ${self:provider.environment.AWS_REGION_DEPLOYED}
+    #     - '.amazonaws.com/'
+    #     - ${self:provider.environment.DEPLOYMENT_ENV}
+    OTEL_TARGET_PYTHON: aws-otel-python38-ver-1-5-0:3
+    OTEL_TARGET_NODEJS: aws-otel-nodejs-ver-1-0-0:1
+
+    # API Gateway
+    API_GATEWAY_UID: !Ref ApiGatewayRestApi
+    API_GATEWAY_URL:
+      !Join
+      - ''
+      - - 'https://'
+        - !Ref ApiGatewayRestApi
+        - '.execute-api.'
+        - ${self:provider.environment.AWS_REGION_DEPLOYED}
+        - '.amazonaws.com/'
+        - ${self:provider.environment.DEPLOYMENT_ENV}
+
+
+privateEnvironment:
+  SQS:
+    OPEN_TELEMETRY_QUEUE_NAME: ${self:provider.environment.RESOURCE_PREFIX}OpenTelemetrySQS
+  SNS:
+    OPEN_TELEMETRY_TOPIC_NAME: ${self:provider.environment.RESOURCE_PREFIX}OpenTelemetrySNS
+
+functions:
+  - ${file(structure/functions/capture/logs/lambda.yml)}
+  - ${file(structure/functions/capture/metrics/lambda.yml)}
+  - ${file(structure/functions/capture/traces/lambda.yml)}
+  - ${file(structure/functions/python/open-telemetry-sns/lambda.yml)}
+  - ${file(structure/functions/python/open-telemetry-sqs/lambda.yml)}
+  - ${file(structure/functions/python/open-telemetry-from/lambda.yml)}
+  - ${file(structure/functions/python/open-telemetry-to/lambda.yml)}
+  - ${file(structure/functions/nodejs/open-telemetry-sns/lambda.yml)}
+  - ${file(structure/functions/nodejs/open-telemetry-sqs/lambda.yml)}
+  - ${file(structure/functions/nodejs/open-telemetry-from/lambda.yml)}
+  - ${file(structure/functions/nodejs/open-telemetry-to/lambda.yml)}
+
+resources:
+  - ${file(structure/resources/sns.yml)}
+  - ${file(structure/resources/sqs.yml)}
+  - ${file(structure/resources/s3.yml)}
+  # - ${file(structure/resources/ec2.yml)}

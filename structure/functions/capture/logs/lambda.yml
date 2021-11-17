@@ -1,0 +1,11 @@
+CaptureLogs:
+  handler: structure/functions/capture/logs/handler.main
+  description: PYTHON - OTEL - CAPTURE
+  memorySize: ${self:provider.memorySize}
+  timeout: ${self:provider.timeout}
+  runtime: ${self:provider.python_runtime}
+  events:
+    - http:
+        path: capture/logs
+        method: post
+        cors: true

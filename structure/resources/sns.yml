@@ -1,0 +1,10 @@
+Resources:
+  OpenTelemetrySNS:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: ${self:privateEnvironment.SNS.OPEN_TELEMETRY_TOPIC_NAME}
+
+    # Properties:
+    #   Subscription:
+    #     - Protocol: sqs
+    #       Endpoint: !GetAtt OpenTelemetrySQS.Arn

@@ -1,0 +1,23 @@
+Resources:
+  OpenTelemetrySQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:privateEnvironment.SQS.OPEN_TELEMETRY_QUEUE_NAME}
+
+  # OpenTelemetrySNSToOpenTelemetrySQSPolicy:
+  #   Type: AWS::SQS::QueuePolicy
+  #   Properties:
+  #     PolicyDocument:
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Sid: "Allow SNS publish to SQS"
+  #           Effect: Allow
+  #           Principal:
+  #             Service: "sns.amazonaws.com"
+  #           Resource: !GetAtt OpenTelemetrySQS.Arn
+  #           Action: SQS:SendMessage
+  #           Condition:
+  #             ArnEquals:
+  #               aws:SourceArn: !Ref OpenTelemetrySNS
+  #     Queues:
+  #       - Ref: OpenTelemetrySNS
