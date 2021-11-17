@@ -27,8 +27,6 @@ provider:
     AWS_ACCOUNT_ID:
       Ref:
         AWS::AccountId
-
-    # Open Telemetry
     OPENTELEMETRY_COLLECTOR_CONFIG_FILE: /var/task/collector.yaml
     # OPENTELEMETRY_COLLECTOR_ARGS:
     #   !Join
@@ -42,8 +40,6 @@ provider:
     #     - ${self:provider.environment.DEPLOYMENT_ENV}
     OTEL_TARGET_PYTHON: aws-otel-python38-ver-1-5-0:3
     OTEL_TARGET_NODEJS: aws-otel-nodejs-ver-1-0-0:1
-
-    # API Gateway
     API_GATEWAY_UID: !Ref ApiGatewayRestApi
     API_GATEWAY_URL:
       !Join
@@ -79,4 +75,3 @@ resources:
   - ${file(structure/resources/sns.yml)}
   - ${file(structure/resources/sqs.yml)}
   - ${file(structure/resources/s3.yml)}
-  # - ${file(structure/resources/ec2.yml)}
