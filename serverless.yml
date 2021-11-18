@@ -5,6 +5,10 @@ frameworkVersion: '2'
 package:
   excludeDevDependencies: true
   individually: true
+  patterns:
+    - '!./structure/functions/tracesgo/**'
+    - ./bin/**
+
 
 provider:
   name: aws
@@ -14,6 +18,7 @@ provider:
   ssh_key: ${env:AWS_EC2_SSH_KEY_NAME, 'OpenTelemetry'}
   python_runtime: python3.8
   nodejs_runtime: nodejs14.x
+  go_runtime: go1.x
   memorySize: 128
   timeout: 30
   lambdaHashingVersion: 20201221
@@ -40,6 +45,7 @@ provider:
     #     - ${self:provider.environment.DEPLOYMENT_ENV}
     OTEL_TARGET_PYTHON: aws-otel-python38-ver-1-5-0:3
     OTEL_TARGET_NODEJS: aws-otel-nodejs-ver-1-0-0:1
+    OTEL_TARGET_GOLANG: aws-otel-nodejs-ver-1-0-0:1
     API_GATEWAY_UID: !Ref ApiGatewayRestApi
     API_GATEWAY_URL:
       !Join
@@ -62,6 +68,7 @@ functions:
   - ${file(structure/functions/capture/logs/lambda.yml)}
   - ${file(structure/functions/capture/metrics/lambda.yml)}
   - ${file(structure/functions/capture/traces/lambda.yml)}
+  - ${file(structure/functions/capture/tracesgo/lambda.yml)}
   - ${file(structure/functions/python/open-telemetry-sns/lambda.yml)}
   - ${file(structure/functions/python/open-telemetry-sqs/lambda.yml)}
   - ${file(structure/functions/python/open-telemetry-from/lambda.yml)}

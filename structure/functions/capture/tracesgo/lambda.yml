@@ -1,0 +1,11 @@
+CaptureTracesGo:
+  handler: bin/tracesgo
+  description: GO - OTEL - CAPTURE
+  memorySize: ${self:provider.memorySize}
+  timeout: ${self:provider.timeout}
+  runtime: ${self:provider.go_runtime}
+  events:
+    - http:
+        path: capture/traces/go
+        method: post
+        cors: true

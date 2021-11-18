@@ -11,7 +11,7 @@ exporters:
   otlphttp:
     endpoint: https://za9yyk0p7k.execute-api.eu-west-1.amazonaws.com/dev
     logs_endpoint: https://za9yyk0p7k.execute-api.eu-west-1.amazonaws.com/dev/capture/logs
-    traces_endpoint: https://za9yyk0p7k.execute-api.eu-west-1.amazonaws.com/dev/capture/traces
+    traces_endpoint: https://za9yyk0p7k.execute-api.eu-west-1.amazonaws.com/dev/capture/traces/go
     metrics_endpoint: https://za9yyk0p7k.execute-api.eu-west-1.amazonaws.com/dev/capture/metrics
     tls:
       insecure: true
