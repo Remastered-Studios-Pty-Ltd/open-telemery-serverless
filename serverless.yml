@@ -5,9 +5,9 @@ frameworkVersion: '2'
 package:
   excludeDevDependencies: true
   individually: true
-  patterns:
-    - '!./structure/functions/tracesgo/**'
-    - ./bin/**
+  # patterns:
+  #   - '!./structure/functions/tracesgo/**'
+  #   - ./bin/**
 
 
 provider:
